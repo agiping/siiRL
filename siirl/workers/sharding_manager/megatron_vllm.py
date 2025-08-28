@@ -303,6 +303,8 @@ class MegatronVLLMShardingManager(BaseShardingManager):
 
     @GPUMemoryLogger(role="megatron vllm sharding_manager", logger=logger)
     def __enter__(self):
+        if self.offload_param:
+            load_megatron_model_to_gpu(self.actor_module, load_grad=False)
         # vllm > 0.7.2
         if "tags" in inspect.signature(self.inference_engine.wake_up).parameters:
             self.inference_engine.wake_up(tags=["weights"])
