@@ -39,6 +39,11 @@ import torch
 import torch.distributed as dist
 
 try:
+    import os
+    # Check if we're in a Ray actor context where Triton might have driver issues
+    if os.getenv("RAY_ACTOR_NAME") is not None or os.getenv("DISABLE_TRITON") is not None:
+        raise ImportError("Triton disabled in Ray Actor context")
+    
     import triton
     import triton.language as tl
 
