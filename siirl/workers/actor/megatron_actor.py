@@ -368,7 +368,7 @@ class MegatronPPOActor(BasePPOActor):
         # TODO: actually, we just need to control the sampling order.
         data.to(get_device_id())
         data.batch = data.batch.contiguous()
-        mini_batch = data
+        mini_batch = DataProto(batch=data.batch, non_tensor_batch=data.non_tensor_batch, meta_info=data.meta_info)
         broadcast_dict_tensor(
             mini_batch.batch,
             src=mpu.get_pipeline_model_parallel_last_rank(),
